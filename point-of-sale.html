@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAV — Point of Sale</title>
+  <link rel="stylesheet" href="point-of-sale.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="landing_page.html" class="nav-logo">CAV</a>
+    <div class="nav-center">
+      <span class="nav-label">Point of Sale</span>
+    </div>
+    <div class="nav-right">
+      <span class="cashier-badge">
+        <span class="cashier-dot"></span>
+        Cashier: <strong>Rina</strong>
+      </span>
+      <a href="Inventory.html" class="nav-link-btn">Inventory</a>
+    </div>
+  </nav>
+
+  <!-- POS LAYOUT -->
+  <main class="pos-layout">
+
+    <!-- LEFT: MENU PANEL -->
+    <section class="menu-panel">
+      <div class="panel-header">
+        <p class="panel-label">Menu</p>
+        <div class="category-tabs">
+          <button class="tab active" data-cat="all">All</button>
+          <button class="tab" data-cat="coffee">Coffee</button>
+          <button class="tab" data-cat="non-coffee">Non-Coffee</button>
+          <button class="tab" data-cat="food">Food</button>
+          <button class="tab" data-cat="studio">Studio</button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="searchInput" placeholder="Search item…" />
+      </div>
+
+      <div class="menu-grid" id="menuGrid">
+        <!-- Items injected by JS -->
+      </div>
+    </section>
+
+    <!-- RIGHT: ORDER PANEL -->
+    <section class="order-panel">
+      <div class="order-header">
+        <div>
+          <p class="panel-label">Current Order</p>
+          <div class="order-meta">
+            <span id="orderNum">Order #001</span>
+            <span class="order-time" id="orderTime"></span>
+          </div>
+        </div>
+        <button class="clear-btn" id="clearBtn">Clear</button>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="customer-bar">
+        <span class="cust-icon">👤</span>
+        <input type="text" id="customerName" placeholder="Customer name (optional)" />
+        <div class="order-type-btns">
+          <button class="otype active" data-type="dine-in">Dine-in</button>
+          <button class="otype" data-type="takeout">Takeout</button>
+        </div>
+      </div>
+
+      <!-- Order Items List -->
+      <div class="order-items" id="orderItems">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">☕</div>
+          <p>No items yet.</p>
+          <span>Select from the menu to begin.</span>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="order-notes">
+        <input type="text" id="orderNotes" placeholder="Special instructions / notes…" />
+      </div>
+
+      <!-- Totals -->
+      <div class="order-totals">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span id="subtotal">₱0.00</span>
+        </div>
+        <div class="total-row">
+          <span>Discount</span>
+          <div class="discount-row">
+            <select id="discountType">
+              <option value="none">None</option>
+              <option value="senior">Senior / PWD (20%)</option>
+              <option value="student">Student (10%)</option>
+              <option value="custom">Custom</option>
+            </select>
+            <input type="number" id="customDiscount" placeholder="%" min="0" max="100" style="display:none;" />
+          </div>
+        </div>
+        <div class="total-row grand">
+          <span>TOTAL</span>
+          <span id="grandTotal">₱0.00</span>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="payment-section">
+        <p class="panel-label" style="margin-bottom:0.8rem;">Payment Method</p>
+        <div class="payment-methods">
+          <button class="pay-method active" data-pay="cash">💵 Cash</button>
+          <button class="pay-method" data-pay="gcash">📱 GCash</button>
+          <button class="pay-method" data-pay="card">💳 Card</button>
+        </div>
+        <div class="cash-input" id="cashInputWrap">
+          <label>Amount Tendered</label>
+          <input type="number" id="cashTendered" placeholder="₱0.00" min="0" />
+          <div class="change-row">
+            <span>Change</span>
+            <span id="changeAmt">₱0.00</span>
+          </div>
+          <div class="quick-cash">
+            <button onclick="setCash(50)">₱50</button>
+            <button onclick="setCash(100)">₱100</button>
+            <button onclick="setCash(200)">₱200</button>
+            <button onclick="setCash(500)">₱500</button>
+            <button onclick="setCash(1000)">₱1000</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="charge-btn" id="chargeBtn">
+        <span>Process Payment</span>
+        <span id="chargeTotal">₱0.00</span>
+      </button>
+    </section>
+
+  </main>
+
+  <!-- RECEIPT MODAL -->
+  <div class="modal-overlay" id="receiptModal">
+    <div class="receipt-modal">
+      <div class="receipt-header">
+        <div class="receipt-logo">CAV</div>
+        <p>Photo Studio &amp; Café</p>
+        <p>123 Sunset Drive, Lipa City, Batangas</p>
+        <p>Tel: +63 917 000 0000</p>
+        <div class="receipt-divider"></div>
+        <div class="receipt-meta">
+          <span id="rOrderNum"></span>
+          <span id="rDate"></span>
+        </div>
+        <div class="receipt-meta">
+          <span id="rCashier"></span>
+          <span id="rType"></span>
+        </div>
+        <div id="rCustomer" class="receipt-customer"></div>
+        <div class="receipt-divider"></div>
+      </div>
+      <div class="receipt-items" id="rItems"></div>
+      <div class="receipt-divider"></div>
+      <div class="receipt-totals" id="rTotals"></div>
+      <div class="receipt-divider dashed"></div>
+      <div class="receipt-payment" id="rPayment"></div>
+      <div class="receipt-footer">
+        <p>Thank you for visiting CAV!</p>
+        <p>Where every moment is crafted.</p>
+        <div class="receipt-barcode">
+          <div class="barcode-lines"></div>
+          <span id="rBarcode"></span>
+        </div>
+      </div>
+      <div class="receipt-actions">
+        <button class="receipt-btn print" onclick="window.print()">Print Receipt</button>
+        <button class="receipt-btn new" id="newOrderBtn">New Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ── DATA ──────────────────────────────────────────────
+  const MENU = [
+    { id: 1,  cat: 'coffee',     name: 'Signature Cav Latte',     desc: 'Vanilla, oat milk, double shot',    price: 150, emoji: '☕' },
+    { id: 2,  cat: 'coffee',     name: 'Dark Room Cold Brew',      desc: '24-hour cold brew, brown sugar',    price: 160, emoji: '🧊' },
+    { id: 3,  cat: 'coffee',     name: 'Shutter Mocha',            desc: 'Dark choc, espresso, cream',        price: 155, emoji: '🍫' },
+    { id: 4,  cat: 'coffee',     name: 'Exposure Americano',       desc: 'Double espresso, sparkling water',  price: 120, emoji: '⚡' },
+    { id: 5,  cat: 'coffee',     name: 'Aperture Espresso',        desc: 'Classic double shot',               price: 100, emoji: '🎞️' },
+    { id: 6,  cat: 'coffee',     name: 'Frame Flat White',         desc: 'Ristretto, full cream milk',        price: 145, emoji: '🖼️' },
+    { id: 7,  cat: 'non-coffee', name: 'Aperture Matcha',          desc: 'Ceremonial grade, oat milk',        price: 140, emoji: '🍵' },
+    { id: 8,  cat: 'non-coffee', name: 'Negatives Taro',           desc: 'Taro paste, oat milk, vanilla',     price: 145, emoji: '💜' },
+    { id: 9,  cat: 'non-coffee', name: 'Develop Chamomile',        desc: 'Honey, lemon, chamomile',           price: 115, emoji: '🌼' },
+    { id: 10, cat: 'non-coffee', name: 'ISO Hot Choco',            desc: 'Belgian dark, steamed milk',        price: 130, emoji: '🍶' },
+    { id: 11, cat: 'non-coffee', name: 'Bokeh Berry Soda',         desc: 'Mixed berry, soda water',           price: 120, emoji: '🫐' },
+    { id: 12, cat: 'food',       name: 'Brioche French Toast',     desc: 'Maple syrup, berries, cream',       price: 200, emoji: '🍞' },
+    { id: 13, cat: 'food',       name: 'Avocado Toast',            desc: 'Sourdough, poached egg, chili',     price: 220, emoji: '🥑' },
+    { id: 14, cat: 'food',       name: 'Croissant Sandwich',       desc: 'Ham, brie, dijon, arugula',         price: 185, emoji: '🥐' },
+    { id: 15, cat: 'food',       name: 'Overnight Oats',           desc: 'Granola, banana, honey',            price: 160, emoji: '🥣' },
+    { id: 16, cat: 'food',       name: 'Dark Room Brownie',        desc: 'Fudge, walnuts, sea salt',          price: 110, emoji: '🍫' },
+    { id: 17, cat: 'studio',     name: 'Studio Rental — 1 hr',     desc: 'Full access, all lighting',         price: 1500, emoji: '💡' },
+    { id: 18, cat: 'studio',     name: 'Studio Rental — 2 hrs',    desc: 'Full access + assistant',           price: 2800, emoji: '📸' },
+    { id: 19, cat: 'studio',     name: 'Portrait Session',         desc: '1 hr shoot + editing',              price: 800,  emoji: '🎞️' },
+    { id: 20, cat: 'studio',     name: 'Product Photography',      desc: 'Per set, 10 final shots',           price: 600,  emoji: '📦' },
+  ];
+
+  let cart = [];
+  let orderCount = 1;
+  let currentPayMethod = 'cash';
+  let orderType = 'dine-in';
+  let activeCategory = 'all';
+
+  // ── RENDER MENU ───────────────────────────────────────
+  function renderMenu(filter = 'all', search = '') {
+    const grid = document.getElementById('menuGrid');
+    let items = MENU;
+    if (filter !== 'all') items = items.filter(i => i.cat === filter);
+    if (search) items = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()));
+    grid.innerHTML = items.map(item => `
+      <button class="menu-item-card" onclick="addToCart(${item.id})">
+        <div class="mic-emoji">${item.emoji}</div>
+        <div class="mic-name">${item.name}</div>
+        <div class="mic-desc">${item.desc}</div>
+        <div class="mic-price">₱${item.price.toLocaleString()}</div>
+      </button>
+    `).join('');
+  }
+
+  // ── CART ──────────────────────────────────────────────
+  function addToCart(id) {
+    const item = MENU.find(i => i.id === id);
+    const existing = cart.find(c => c.id === id);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ ...item, qty: 1 });
+    }
+    renderCart();
+    renderMenu(activeCategory, document.getElementById('searchInput').value);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(c => c.id !== id);
+    renderCart();
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(c => c.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id);
+    else renderCart();
+  }
+
+  function renderCart() {
+    const container = document.getElementById('orderItems');
+    const empty = document.getElementById('emptyState');
+    if (cart.length === 0) {
+      container.innerHTML = '';
+      container.appendChild(empty);
+      empty.style.display = 'flex';
+      updateTotals();
+      return;
+    }
+    empty.style.display = 'none';
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="ci-emoji">${item.emoji}</div>
+        <div class="ci-info">
+          <div class="ci-name">${item.name}</div>
+          <div class="ci-price">₱${item.price.toLocaleString()}</div>
+        </div>
+        <div class="ci-controls">
+          <button onclick="changeQty(${item.id}, -1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${item.id}, +1)">+</button>
+        </div>
+        <div class="ci-total">₱${(item.price * item.qty).toLocaleString()}</div>
+        <button class="ci-remove" onclick="removeFromCart(${item.id})">✕</button>
+      </div>
+    `).join('');
+    updateTotals();
+  }
+
+  // ── TOTALS ────────────────────────────────────────────
+  function updateTotals() {
+    const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const discountType = document.getElementById('discountType').value;
+    let discPct = 0;
+    if (discountType === 'senior') discPct = 20;
+    else if (discountType === 'student') discPct = 10;
+    else if (discountType === 'custom') discPct = parseFloat(document.getElementById('customDiscount').value) || 0;
+    const discAmt = subtotal * (discPct / 100);
+    const grand = subtotal - discAmt;
+
+    document.getElementById('subtotal').textContent = `₱${subtotal.toLocaleString('en-PH', {minimumFractionDigits:2})}`;
+    document.getElementById('grandTotal').textContent = `₱${grand.toLocaleString('en-PH', {minimumFractionDigits:2})}`;
+    document.getElementById('chargeTotal').textContent = `₱${grand.toLocaleString('en-PH', {minimumFractionDigits:2})}`;
+    updateChange();
+  }
+
+  function updateChange() {
+    const grandStr = document.getElementById('grandTotal').textContent.replace(/[₱,]/g, '');
+    const grand = parseFloat(grandStr) || 0;
+    const tendered = parseFloat(document.getElementById('cashTendered').value) || 0;
+    const change = tendered - grand;
+    document.getElementById('changeAmt').textContent = change >= 0
+      ? `₱${change.toLocaleString('en-PH', {minimumFractionDigits:2})}`
+      : '—';
+    document.getElementById('changeAmt').style.color = change < 0 ? '#e05555' : 'var(--yellow)';
+  }
+
+  function setCash(amt) {
+    document.getElementById('cashTendered').value = amt;
+    updateChange();
+  }
+
+  // ── PROCESS PAYMENT ───────────────────────────────────
+  document.getElementById('chargeBtn').addEventListener('click', () => {
+    if (cart.length === 0) {
+      shakeBtn();
+      return;
+    }
+    if (currentPayMethod === 'cash') {
+      const grandStr = document.getElementById('grandTotal').textContent.replace(/[₱,]/g, '');
+      const grand = parseFloat(grandStr) || 0;
+      const tendered = parseFloat(document.getElementById('cashTendered').value) || 0;
+      if (tendered < grand) {
+        document.getElementById('cashTendered').classList.add('shake');
+        setTimeout(() => document.getElementById('cashTendered').classList.remove('shake'), 500);
+        return;
+      }
+    }
+    showReceipt();
+  });
+
+  function shakeBtn() {
+    const btn = document.getElementById('chargeBtn');
+    btn.classList.add('shake');
+    setTimeout(() => btn.classList.remove('shake'), 500);
+  }
+
+  // ── RECEIPT ───────────────────────────────────────────
+  function showReceipt() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+    const grandStr = document.getElementById('grandTotal').textContent.replace(/[₱,]/g, '');
+    const grand = parseFloat(grandStr) || 0;
+    const tendered = parseFloat(document.getElementById('cashTendered').value) || 0;
+    const change = tendered - grand;
+    const customer = document.getElementById('customerName').value || 'Walk-in';
+    const oNum = `#${String(orderCount).padStart(3,'0')}`;
+
+    document.getElementById('rOrderNum').textContent = `Order ${oNum}`;
+    document.getElementById('rDate').textContent = `${dateStr} · ${timeStr}`;
+    document.getElementById('rCashier').textContent = 'Cashier: Rina';
+    document.getElementById('rType').textContent = orderType === 'dine-in' ? 'Dine-in' : 'Takeout';
+    document.getElementById('rCustomer').textContent = `Customer: ${customer}`;
+    document.getElementById('rCustomer').style.display = customer !== 'Walk-in' ? 'block' : 'none';
+
+    // Items
+    document.getElementById('rItems').innerHTML = cart.map(i => `
+      <div class="r-item">
+        <span class="r-item-name">${i.emoji} ${i.name}</span>
+        <span class="r-item-qty">x${i.qty}</span>
+        <span class="r-item-price">₱${(i.price * i.qty).toLocaleString('en-PH', {minimumFractionDigits:2})}</span>
+      </div>
+    `).join('');
+
+    // Totals
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const discountType = document.getElementById('discountType').value;
+    let discLabel = '';
+    let discPct = 0;
+    if (discountType === 'senior') { discLabel = 'Senior/PWD (20%)'; discPct = 20; }
+    else if (discountType === 'student') { discLabel = 'Student (10%)'; discPct = 10; }
+    else if (discountType === 'custom') {
+      discPct = parseFloat(document.getElementById('customDiscount').value) || 0;
+      discLabel = `Discount (${discPct}%)`;
+    }
+    const discAmt = subtotal * (discPct / 100);
+
+    document.getElementById('rTotals').innerHTML = `
+      <div class="r-total-row"><span>Subtotal</span><span>₱${subtotal.toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>
+      ${discAmt > 0 ? `<div class="r-total-row"><span>${discLabel}</span><span>-₱${discAmt.toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>` : ''}
+      <div class="r-total-row grand"><span>TOTAL</span><span>₱${grand.toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>
+    `;
+
+    // Payment
+    const payLabels = { cash: 'Cash', gcash: 'GCash', card: 'Card' };
+    let payInfo = `<div class="r-total-row"><span>Payment</span><span>${payLabels[currentPayMethod]}</span></div>`;
+    if (currentPayMethod === 'cash') {
+      payInfo += `<div class="r-total-row"><span>Tendered</span><span>₱${tendered.toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>`;
+      payInfo += `<div class="r-total-row"><span>Change</span><span>₱${Math.max(0,change).toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>`;
+    }
+    document.getElementById('rPayment').innerHTML = payInfo;
+    document.getElementById('rBarcode').textContent = `CAV-${Date.now().toString(36).toUpperCase()}`;
+
+    document.getElementById('receiptModal').classList.add('open');
+  }
+
+  document.getElementById('newOrderBtn').addEventListener('click', () => {
+    document.getElementById('receiptModal').classList.remove('open');
+    cart = [];
+    orderCount++;
+    document.getElementById('orderNum').textContent = `Order #${String(orderCount).padStart(3,'0')}`;
+    document.getElementById('customerName').value = '';
+    document.getElementById('orderNotes').value = '';
+    document.getElementById('cashTendered').value = '';
+    document.getElementById('discountType').value = 'none';
+    document.getElementById('customDiscount').style.display = 'none';
+    renderCart();
+  });
+
+  // ── TABS / SEARCH ─────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeCategory = tab.dataset.cat;
+      renderMenu(activeCategory, document.getElementById('searchInput').value);
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    renderMenu(activeCategory, e.target.value);
+  });
+
+  // ── PAYMENT METHODS ───────────────────────────────────
+  document.querySelectorAll('.pay-method').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pay-method').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPayMethod = btn.dataset.pay;
+      document.getElementById('cashInputWrap').style.display = currentPayMethod === 'cash' ? 'block' : 'none';
+    });
+  });
+
+  // ── ORDER TYPE ────────────────────────────────────────
+  document.querySelectorAll('.otype').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.otype').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      orderType = btn.dataset.type;
+    });
+  });
+
+  // ── DISCOUNT ─────────────────────────────────────────
+  document.getElementById('discountType').addEventListener('change', e => {
+    const cust = document.getElementById('customDiscount');
+    cust.style.display = e.target.value === 'custom' ? 'inline-block' : 'none';
+    updateTotals();
+  });
+  document.getElementById('customDiscount').addEventListener('input', updateTotals);
+  document.getElementById('cashTendered').addEventListener('input', updateChange);
+
+  // ── CLEAR ─────────────────────────────────────────────
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (cart.length === 0) return;
+    if (confirm('Clear current order?')) {
+      cart = [];
+      renderCart();
+    }
+  });
+
+  // ── CLOCK ─────────────────────────────────────────────
+  function updateClock() {
+    document.getElementById('orderTime').textContent = new Date().toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ── INIT ──────────────────────────────────────────────
+  renderMenu();
+  renderCart();
+
+  </script>
+</body>
+</html>

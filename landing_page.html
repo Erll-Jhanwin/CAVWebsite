@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAV — Photo Studio & Café</title>
+  <link rel="stylesheet" href="landing_page.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">CAV</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="Inventory.html">Inventory</a></li>
+    </ul>
+    <a href="point-of-sale.html" class="nav-cta">Order Now</a>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="point-of-sale.html">Order Now</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-text">CAV</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Photo Studio &amp; Café — Est. 2024</p>
+      <h1 class="hero-title">Where Every<br/><em>Moment</em><br/>Is Crafted</h1>
+      <p class="hero-sub">A sanctuary for creatives. Shoot, sip, and stay awhile.</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary">Explore Studio</a>
+        <a href="point-of-sale.html" class="btn-secondary">Order a Drink</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+    <div class="hero-float-badge">Open Daily · 8AM–9PM</div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrapper">
+    <div class="marquee">
+      <span>PHOTO STUDIO</span><span class="dot">◆</span>
+      <span>CAFÉ</span><span class="dot">◆</span>
+      <span>EVENTS</span><span class="dot">◆</span>
+      <span>PORTRAITS</span><span class="dot">◆</span>
+      <span>COFFEE</span><span class="dot">◆</span>
+      <span>CREATIVE SPACE</span><span class="dot">◆</span>
+      <span>PHOTO STUDIO</span><span class="dot">◆</span>
+      <span>CAFÉ</span><span class="dot">◆</span>
+      <span>EVENTS</span><span class="dot">◆</span>
+      <span>PORTRAITS</span><span class="dot">◆</span>
+      <span>COFFEE</span><span class="dot">◆</span>
+      <span>CREATIVE SPACE</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-img-block img-block-1">
+          <div class="img-placeholder">
+            <span class="img-icon">📷</span>
+          </div>
+        </div>
+        <div class="about-img-block img-block-2">
+          <div class="img-placeholder dark">
+            <span class="img-icon">☕</span>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Sessions Shot</div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="section-label">Our Story</p>
+        <h2>More Than a<br/><em>Studio.</em> More Than<br/>a Café.</h2>
+        <p>CAV was born from a simple belief: creativity thrives when you're comfortable. We fused a professional photography studio with a warm, artisan café so your best work happens naturally.</p>
+        <p>From intimate portraits to product shoots, from morning espresso to afternoon sessions — everything under one roof, designed for makers.</p>
+        <div class="about-pills">
+          <span>Professional Lighting</span>
+          <span>Backdrops & Props</span>
+          <span>Artisan Coffee</span>
+          <span>Fast Wi-Fi</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="services-header">
+      <p class="section-label">What We Offer</p>
+      <h2>Studio &amp; Café<br/>Services</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" data-num="01">
+        <div class="service-icon">🎞️</div>
+        <h3>Portrait Sessions</h3>
+        <p>Professional headshots, solo portraits, and personal branding shoots with expert lighting setups.</p>
+        <div class="service-price">From ₱800/hr</div>
+      </div>
+      <div class="service-card featured" data-num="02">
+        <div class="service-icon">🖼️</div>
+        <h3>Studio Rental</h3>
+        <p>Full studio access with cyclorama wall, strobes, modifiers, and a wide range of backdrops.</p>
+        <div class="service-price">From ₱1,500/hr</div>
+      </div>
+      <div class="service-card" data-num="03">
+        <div class="service-icon">🎂</div>
+        <h3>Events & Milestones</h3>
+        <p>Debut, prenuptial, baptism, and other milestone photography packages tailored just for you.</p>
+        <div class="service-price">Packages from ₱3,500</div>
+      </div>
+      <div class="service-card" data-num="04">
+        <div class="service-icon">☕</div>
+        <h3>Artisan Café</h3>
+        <p>Specialty coffee, tea, light meals, and pastries brewed with care for every creative soul.</p>
+        <div class="service-price">Walk-in Welcome</div>
+      </div>
+      <div class="service-card" data-num="05">
+        <div class="service-icon">📦</div>
+        <h3>Product Photography</h3>
+        <p>Clean, conversion-ready product shots for e-commerce, lookbooks, and social media.</p>
+        <div class="service-price">From ₱600/set</div>
+      </div>
+      <div class="service-card" data-num="06">
+        <div class="service-icon">🎓</div>
+        <h3>Workshops</h3>
+        <p>Beginner to advanced photography and editing workshops hosted by working professionals.</p>
+        <div class="service-price">From ₱1,200/session</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="gallery-header">
+      <p class="section-label">Portfolio</p>
+      <h2>Shot Here,<br/>Right Here</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item tall">
+        <div class="gallery-placeholder">
+          <span>Portrait Session</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span>Product Shoot</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder dark">
+          <span>Event Coverage</span>
+        </div>
+      </div>
+      <div class="gallery-item wide">
+        <div class="gallery-placeholder">
+          <span>Studio Setup</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder dark">
+          <span>Café Vibes</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU TEASER -->
+  <section class="menu-teaser" id="menu">
+    <div class="menu-left">
+      <p class="section-label">Café Menu</p>
+      <h2>Sip Something<br/><em>Exceptional</em></h2>
+      <p>Our baristas craft every drink with the same precision as our photographers frame every shot. Because details matter.</p>
+      <a href="point-of-sale.html" class="btn-primary">Browse Full Menu</a>
+    </div>
+    <div class="menu-right">
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <span class="menu-item-name">Signature Cav Latte</span>
+          <span class="menu-item-desc">Vanilla, oat milk, double shot</span>
+        </div>
+        <span class="menu-item-price">₱150</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <span class="menu-item-name">Dark Room Cold Brew</span>
+          <span class="menu-item-desc">24-hour cold brew, brown sugar</span>
+        </div>
+        <span class="menu-item-price">₱160</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <span class="menu-item-name">Aperture Matcha</span>
+          <span class="menu-item-desc">Ceremonial grade, oat milk</span>
+        </div>
+        <span class="menu-item-price">₱140</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <span class="menu-item-name">Shutter Mocha</span>
+          <span class="menu-item-desc">Dark chocolate, espresso, cream</span>
+        </div>
+        <span class="menu-item-price">₱155</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <span class="menu-item-name">Exposure Americano</span>
+          <span class="menu-item-desc">Double espresso, sparkling water</span>
+        </div>
+        <span class="menu-item-price">₱120</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING CTA -->
+  <section class="booking-cta">
+    <div class="cta-inner">
+      <p class="section-label" style="color:#f5f2a2;">Book a Session</p>
+      <h2>Ready to Create<br/>Something <em>Beautiful?</em></h2>
+      <p>Reserve your studio time or drop by for a coffee. Walk-ins welcome for the café.</p>
+      <div class="cta-actions">
+        <a href="#contact" class="btn-primary light">Book Studio</a>
+        <a href="point-of-sale.html" class="btn-outline light">Order Online</a>
+      </div>
+    </div>
+    <div class="cta-deco">CAV</div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="section-label">Find Us</p>
+        <h2>Visit CAV</h2>
+        <div class="contact-details">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <div>
+              <strong>Address</strong>
+              <p>123 Sunset Drive, Lipa City, Batangas</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕐</span>
+            <div>
+              <strong>Hours</strong>
+              <p>Monday – Sunday, 8:00 AM – 9:00 PM</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <div>
+              <strong>Phone</strong>
+              <p>+63 917 000 0000</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <div>
+              <strong>Email</strong>
+              <p>hello@cavstudio.ph</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3>Send a Message</h3>
+        <form>
+          <div class="form-row">
+            <input type="text" placeholder="Your Name" />
+            <input type="email" placeholder="Email Address" />
+          </div>
+          <select>
+            <option value="">Service Inquiry</option>
+            <option>Portrait Session</option>
+            <option>Studio Rental</option>
+            <option>Events Package</option>
+            <option>Workshop</option>
+            <option>General Inquiry</option>
+          </select>
+          <textarea placeholder="Tell us about your shoot or visit…" rows="4"></textarea>
+          <button type="submit" class="btn-primary full-width">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">CAV</div>
+        <p>Photo Studio &amp; Café<br/>Where every moment is crafted.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="#">Portrait Sessions</a></li>
+            <li><a href="#">Studio Rental</a></li>
+            <li><a href="#">Product Photography</a></li>
+            <li><a href="#">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Café</h4>
+          <ul>
+            <li><a href="point-of-sale.html">Order Online</a></li>
+            <li><a href="#">Menu</a></li>
+            <li><a href="#">Catering</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Internal</h4>
+          <ul>
+            <li><a href="point-of-sale.html">Point of Sale</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 CAV Photo Studio &amp; Café. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="#">FB</a>
+        <a href="#">IG</a>
+        <a href="#">TT</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.nav');
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.service-card, .gallery-item, .menu-item, .about-grid, .contact-grid').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

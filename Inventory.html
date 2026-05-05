@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAV — Inventory</title>
+  <link rel="stylesheet" href="Inventory.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="mainNav">
+    <div class="nav-logo">CAV</div>
+    <ul class="nav-links">
+      <li><a href="landing_page.html">Home</a></li>
+      <li><a href="landing_page.html#services">Services</a></li>
+      <li><a href="point-of-sale.html">POS</a></li>
+      <li><a href="#" class="nav-active">Inventory</a></li>
+    </ul>
+    <a href="point-of-sale.html" class="nav-cta">Order Now</a>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+    <ul>
+      <li><a href="landing_page.html">Home</a></li>
+      <li><a href="landing_page.html#services">Services</a></li>
+      <li><a href="point-of-sale.html">POS</a></li>
+      <li><a href="#">Inventory</a></li>
+    </ul>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="page-header-bg-text">INV</div>
+    <div class="page-header-content">
+      <p class="hero-eyebrow">Internal System · Stock Control</p>
+      <h1 class="page-title">Inventory<br/><em>Dashboard</em></h1>
+      <p class="page-sub">Real-time stock monitoring for CAV Photo Studio &amp; Café.</p>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <section class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Total Items</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value" id="stat-instock">0</div>
+      <div class="stat-label">In Stock</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-value" id="stat-low">0</div>
+      <div class="stat-label">Low Stock</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-icon">🚨</div>
+      <div class="stat-value" id="stat-out">0</div>
+      <div class="stat-label">Out of Stock</div>
+    </div>
+  </section>
+
+  <!-- TOOLBAR -->
+  <section class="toolbar">
+    <div class="toolbar-inner">
+      <div class="toolbar-left">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search items…" />
+        </div>
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="café">Café</button>
+          <button class="filter-tab" data-filter="studio">Studio</button>
+          <button class="filter-tab" data-filter="supplies">Supplies</button>
+          <button class="filter-tab" data-filter="equipment">Equipment</button>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-add" id="addItemBtn">+ Add Item</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVENTORY TABLE -->
+  <section class="inventory-section">
+    <div class="table-wrapper">
+      <table class="inventory-table" id="inventoryTable">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="name">Item <span class="sort-icon">↕</span></th>
+            <th class="sortable" data-col="category">Category <span class="sort-icon">↕</span></th>
+            <th class="sortable" data-col="stock">Stock <span class="sort-icon">↕</span></th>
+            <th>Unit</th>
+            <th class="sortable" data-col="threshold">Threshold <span class="sort-icon">↕</span></th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h3 id="modalTitle">Add New Item</h3>
+      <div class="modal-form">
+        <input type="hidden" id="editIndex" value="-1" />
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Item Name</label>
+            <input type="text" id="fieldName" placeholder="e.g. Oat Milk" />
+          </div>
+          <div class="modal-field">
+            <label>Category</label>
+            <select id="fieldCategory">
+              <option value="café">Café</option>
+              <option value="studio">Studio</option>
+              <option value="supplies">Supplies</option>
+              <option value="equipment">Equipment</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Current Stock</label>
+            <input type="number" id="fieldStock" placeholder="0" min="0" />
+          </div>
+          <div class="modal-field">
+            <label>Unit</label>
+            <input type="text" id="fieldUnit" placeholder="e.g. liters, pcs, kg" />
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Low Stock Threshold</label>
+            <input type="number" id="fieldThreshold" placeholder="5" min="0" />
+          </div>
+          <div class="modal-field">
+            <label>Cost per Unit (₱)</label>
+            <input type="number" id="fieldCost" placeholder="0.00" min="0" step="0.01" />
+          </div>
+        </div>
+        <div class="modal-field full">
+          <label>Notes</label>
+          <textarea id="fieldNotes" placeholder="Supplier, storage notes…" rows="2"></textarea>
+        </div>
+        <button class="btn-primary full-width" id="saveItemBtn">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESTOCK MODAL -->
+  <div class="modal-overlay" id="restockOverlay">
+    <div class="modal small">
+      <button class="modal-close" id="restockClose">✕</button>
+      <h3>Restock Item</h3>
+      <p class="restock-name" id="restockName">Item Name</p>
+      <div class="modal-field">
+        <label>Add Quantity</label>
+        <input type="number" id="restockQty" placeholder="0" min="1" />
+      </div>
+      <button class="btn-primary full-width" id="restockConfirm">Confirm Restock</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">CAV</div>
+        <p>Photo Studio &amp; Café<br/>Where every moment is crafted.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="#">Portrait Sessions</a></li>
+            <li><a href="#">Studio Rental</a></li>
+            <li><a href="#">Product Photography</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Café</h4>
+          <ul>
+            <li><a href="point-of-sale.html">Order Online</a></li>
+            <li><a href="#">Menu</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Internal</h4>
+          <ul>
+            <li><a href="point-of-sale.html">Point of Sale</a></li>
+            <li><a href="#">Inventory</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 CAV Photo Studio &amp; Café. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="#">FB</a>
+        <a href="#">IG</a>
+        <a href="#">TT</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── DATA ── */
+    let inventory = [
+      { id: 1, name: 'Espresso Beans', category: 'café', stock: 4, unit: 'kg', threshold: 5, cost: 450, notes: 'Single origin — La Trinidad', updated: '2024-06-01' },
+      { id: 2, name: 'Oat Milk', category: 'café', stock: 18, unit: 'liters', threshold: 8, cost: 95, notes: 'Oatly barista edition', updated: '2024-06-02' },
+      { id: 3, name: 'Whole Milk', category: 'café', stock: 12, unit: 'liters', threshold: 6, cost: 65, notes: '', updated: '2024-06-02' },
+      { id: 4, name: 'White Sugar', category: 'café', stock: 3, unit: 'kg', threshold: 5, cost: 60, notes: 'Refined white', updated: '2024-05-30' },
+      { id: 5, name: 'Brown Sugar Syrup', category: 'café', stock: 0, unit: 'bottles', threshold: 3, cost: 120, notes: 'Out — reorder ASAP', updated: '2024-05-28' },
+      { id: 6, name: 'Vanilla Syrup', category: 'café', stock: 6, unit: 'bottles', threshold: 3, cost: 130, notes: 'Monin brand', updated: '2024-06-01' },
+      { id: 7, name: 'Matcha Powder', category: 'café', stock: 2, unit: 'kg', threshold: 3, cost: 680, notes: 'Ceremonial grade, Uji', updated: '2024-06-01' },
+      { id: 8, name: 'Dark Chocolate Sauce', category: 'café', stock: 8, unit: 'bottles', threshold: 3, cost: 95, notes: '', updated: '2024-05-31' },
+      { id: 9, name: 'Whipped Cream (cans)', category: 'café', stock: 10, unit: 'pcs', threshold: 5, cost: 75, notes: 'Stored in cold room', updated: '2024-06-02' },
+      { id: 10, name: 'Paper Cups (12oz)', category: 'supplies', stock: 220, unit: 'pcs', threshold: 100, cost: 5, notes: 'Order from Shopee', updated: '2024-05-29' },
+      { id: 11, name: 'Paper Cups (16oz)', category: 'supplies', stock: 85, unit: 'pcs', threshold: 100, cost: 6, notes: '', updated: '2024-05-29' },
+      { id: 12, name: 'Cup Lids', category: 'supplies', stock: 300, unit: 'pcs', threshold: 100, cost: 2, notes: '', updated: '2024-05-29' },
+      { id: 13, name: 'Straws (Paper)', category: 'supplies', stock: 40, unit: 'pcs', threshold: 50, cost: 1.5, notes: 'Low — reorder', updated: '2024-06-01' },
+      { id: 14, name: 'Tissue Paper', category: 'supplies', stock: 15, unit: 'packs', threshold: 10, cost: 25, notes: '', updated: '2024-05-28' },
+      { id: 15, name: 'Sanitizer', category: 'supplies', stock: 3, unit: 'bottles', threshold: 4, cost: 80, notes: '500ml bottles', updated: '2024-06-01' },
+      { id: 16, name: 'Backdrop — White Seamless', category: 'studio', stock: 2, unit: 'rolls', threshold: 1, cost: 850, notes: '2.7m wide', updated: '2024-05-25' },
+      { id: 17, name: 'Backdrop — Black Seamless', category: 'studio', stock: 1, unit: 'rolls', threshold: 1, cost: 850, notes: '2.7m wide', updated: '2024-05-25' },
+      { id: 18, name: 'Backdrop — Cream Muslin', category: 'studio', stock: 3, unit: 'pcs', threshold: 1, cost: 1200, notes: '', updated: '2024-05-20' },
+      { id: 19, name: 'Strobe Flash Tubes', category: 'studio', stock: 0, unit: 'pcs', threshold: 2, cost: 950, notes: 'Out — needs replacement', updated: '2024-05-15' },
+      { id: 20, name: 'Reflector 5-in-1 (60cm)', category: 'studio', stock: 4, unit: 'pcs', threshold: 2, cost: 380, notes: '', updated: '2024-05-22' },
+      { id: 21, name: 'Color Gels Set', category: 'studio', stock: 2, unit: 'sets', threshold: 1, cost: 290, notes: '', updated: '2024-05-18' },
+      { id: 22, name: 'Memory Cards (128GB)', category: 'equipment', stock: 5, unit: 'pcs', threshold: 3, cost: 1200, notes: 'SanDisk Extreme Pro', updated: '2024-06-01' },
+      { id: 23, name: 'Camera Batteries', category: 'equipment', stock: 1, unit: 'pcs', threshold: 3, cost: 800, notes: 'LP-E6NH compatible', updated: '2024-06-01' },
+      { id: 24, name: 'HDMI Cables (2m)', category: 'equipment', stock: 6, unit: 'pcs', threshold: 2, cost: 250, notes: '', updated: '2024-05-19' },
+      { id: 25, name: 'Lens Cleaning Kit', category: 'equipment', stock: 4, unit: 'sets', threshold: 2, cost: 180, notes: '', updated: '2024-05-22' },
+    ];
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let sortCol = null;
+    let sortDir = 1;
+    let restockIndex = -1;
+    let nextId = 26;
+
+    /* ── STATUS ── */
+    function getStatus(item) {
+      if (item.stock === 0) return 'out';
+      if (item.stock <= item.threshold) return 'low';
+      return 'in';
+    }
+
+    /* ── STATS ── */
+    function updateStats(data) {
+      const total = inventory.length;
+      const inStock = inventory.filter(i => getStatus(i) === 'in').length;
+      const low = inventory.filter(i => getStatus(i) === 'low').length;
+      const out = inventory.filter(i => getStatus(i) === 'out').length;
+
+      animateCount('stat-total', total);
+      animateCount('stat-instock', inStock);
+      animateCount('stat-low', low);
+      animateCount('stat-out', out);
+    }
+
+    function animateCount(id, target) {
+      const el = document.getElementById(id);
+      let current = 0;
+      const step = Math.ceil(target / 20);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, 40);
+    }
+
+    /* ── RENDER ── */
+    function getFiltered() {
+      let data = [...inventory];
+      if (currentFilter !== 'all') data = data.filter(i => i.category === currentFilter);
+      if (searchQuery) data = data.filter(i =>
+        i.name.toLowerCase().includes(searchQuery) ||
+        i.category.toLowerCase().includes(searchQuery) ||
+        i.notes.toLowerCase().includes(searchQuery)
+      );
+      if (sortCol) {
+        data.sort((a, b) => {
+          let av = a[sortCol], bv = b[sortCol];
+          if (typeof av === 'string') av = av.toLowerCase(), bv = bv.toLowerCase();
+          return av < bv ? -sortDir : av > bv ? sortDir : 0;
+        });
+      }
+      return data;
+    }
+
+    function renderTable() {
+      const data = getFiltered();
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-row">No items found.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const status = getStatus(item);
+        const idx = inventory.findIndex(i => i.id === item.id);
+        const statusLabel = status === 'out' ? 'Out of Stock' : status === 'low' ? 'Low Stock' : 'In Stock';
+        const tr = document.createElement('tr');
+        tr.className = `row-${status}`;
+        tr.innerHTML = `
+          <td class="td-name">${item.name}</td>
+          <td><span class="cat-tag cat-${item.category}">${item.category}</span></td>
+          <td class="td-stock">
+            <span class="stock-bar-wrap">
+              <span class="stock-bar-fill status-${status}" style="width:${Math.min((item.stock / (item.threshold * 3)) * 100, 100)}%"></span>
+            </span>
+            <span class="stock-num">${item.stock}</span>
+          </td>
+          <td class="td-unit">${item.unit}</td>
+          <td class="td-threshold">${item.threshold}</td>
+          <td><span class="status-badge status-${status}">${statusLabel}</span></td>
+          <td class="td-date">${item.updated}</td>
+          <td class="td-actions">
+            <button class="action-btn restock-btn" data-idx="${idx}" title="Restock">+</button>
+            <button class="action-btn edit-btn" data-idx="${idx}" title="Edit">✏️</button>
+            <button class="action-btn delete-btn" data-idx="${idx}" title="Delete">🗑</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Bind row actions
+      document.querySelectorAll('.restock-btn').forEach(btn => {
+        btn.addEventListener('click', () => openRestock(+btn.dataset.idx));
+      });
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => openEdit(+btn.dataset.idx));
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteItem(+btn.dataset.idx));
+      });
+    }
+
+    /* ── ADD / EDIT MODAL ── */
+    function openAdd() {
+      document.getElementById('modalTitle').textContent = 'Add New Item';
+      document.getElementById('editIndex').value = -1;
+      document.getElementById('fieldName').value = '';
+      document.getElementById('fieldCategory').value = 'café';
+      document.getElementById('fieldStock').value = '';
+      document.getElementById('fieldUnit').value = '';
+      document.getElementById('fieldThreshold').value = '';
+      document.getElementById('fieldCost').value = '';
+      document.getElementById('fieldNotes').value = '';
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function openEdit(idx) {
+      const item = inventory[idx];
+      document.getElementById('modalTitle').textContent = 'Edit Item';
+      document.getElementById('editIndex').value = idx;
+      document.getElementById('fieldName').value = item.name;
+      document.getElementById('fieldCategory').value = item.category;
+      document.getElementById('fieldStock').value = item.stock;
+      document.getElementById('fieldUnit').value = item.unit;
+      document.getElementById('fieldThreshold').value = item.threshold;
+      document.getElementById('fieldCost').value = item.cost;
+      document.getElementById('fieldNotes').value = item.notes;
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function saveItem() {
+      const idx = +document.getElementById('editIndex').value;
+      const name = document.getElementById('fieldName').value.trim();
+      const category = document.getElementById('fieldCategory').value;
+      const stock = +document.getElementById('fieldStock').value;
+      const unit = document.getElementById('fieldUnit').value.trim();
+      const threshold = +document.getElementById('fieldThreshold').value;
+      const cost = +document.getElementById('fieldCost').value;
+      const notes = document.getElementById('fieldNotes').value.trim();
+      if (!name || unit === '') return;
+
+      const today = new Date().toISOString().split('T')[0];
+      if (idx === -1) {
+        inventory.push({ id: nextId++, name, category, stock, unit, threshold, cost, notes, updated: today });
+      } else {
+        inventory[idx] = { ...inventory[idx], name, category, stock, unit, threshold, cost, notes, updated: today };
+      }
+      closeModal();
+      renderTable();
+      updateStats();
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+    }
+
+    /* ── RESTOCK ── */
+    function openRestock(idx) {
+      restockIndex = idx;
+      document.getElementById('restockName').textContent = inventory[idx].name;
+      document.getElementById('restockQty').value = '';
+      document.getElementById('restockOverlay').classList.add('open');
+    }
+
+    function confirmRestock() {
+      const qty = +document.getElementById('restockQty').value;
+      if (qty <= 0) return;
+      const today = new Date().toISOString().split('T')[0];
+      inventory[restockIndex].stock += qty;
+      inventory[restockIndex].updated = today;
+      document.getElementById('restockOverlay').classList.remove('open');
+      renderTable();
+      updateStats();
+    }
+
+    function deleteItem(idx) {
+      if (!confirm(`Delete "${inventory[idx].name}"?`)) return;
+      inventory.splice(idx, 1);
+      renderTable();
+      updateStats();
+    }
+
+    /* ── SORT ── */
+    document.querySelectorAll('.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) sortDir *= -1;
+        else { sortCol = col; sortDir = 1; }
+        document.querySelectorAll('.sort-icon').forEach(si => si.textContent = '↕');
+        th.querySelector('.sort-icon').textContent = sortDir === 1 ? '↑' : '↓';
+        renderTable();
+      });
+    });
+
+    /* ── FILTER TABS ── */
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTable();
+      });
+    });
+
+    /* ── SEARCH ── */
+    document.getElementById('searchInput').addEventListener('input', e => {
+      searchQuery = e.target.value.toLowerCase();
+      renderTable();
+    });
+
+    /* ── BINDINGS ── */
+    document.getElementById('addItemBtn').addEventListener('click', openAdd);
+    document.getElementById('saveItemBtn').addEventListener('click', saveItem);
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+    document.getElementById('restockClose').addEventListener('click', () => document.getElementById('restockOverlay').classList.remove('open'));
+    document.getElementById('restockConfirm').addEventListener('click', confirmRestock);
+    document.getElementById('restockOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('restockOverlay').classList.remove('open'); });
+
+    /* ── NAV ── */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    /* ── INIT ── */
+    renderTable();
+    updateStats();
+  </script>
+</body>
+</html>
